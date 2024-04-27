@@ -1,0 +1,36 @@
+include(CTest)
+
+file(GLOB TEST_SOURCES "../tests/**/*.cpp")
+
+foreach(TEST_SOURCE ${TEST_SOURCES})
+    get_filename_component(TEST_SOURCE_NAME ${TEST_SOURCE} NAME_WE)
+    set(TEST_NAME test_${TEST_SOURCE_NAME})
+    add_executable(${TEST_NAME} ${TEST_SOURCE})
+    target_include_directories(${TEST_NAME} PRIVATE ${OPTIM_HEADER_DIR})
+    target_link_libraries(${TEST_NAME} PRIVATE optim)
+
+    if(OPTIM_LINEAR_ALG_LIB STREQUAL "eigen")
+        target_compile_definitions(${TEST_NAME} PRIVATE OPTIM_ENABLE_EIGEN_WRAPPERS)
+        find_package(Eigen3 REQUIRED)
+        target_include_directories(${TEST_NAME} PRIVATE ${EIGEN3_INCLUDE_DIR})
+    elseif(OPTIM_LINEAR_ALG_LIB STREQUAL "arma")
+        target_compile_definitions(${TEST_NAME} PRIVATE OPTIM_ENABLE_ARMA_WRAPPERS)
+        find_package(Armadillo REQUIRED)
+        target_include_directories(${TEST_NAME} PRIVATE ${ARMADILLO_INCLUDE_DIRS})
+        target_link_libraries(${TEST_NAME} PUBLIC ${ARMADILLO_LIBRARIES})
+    else()
+        message(FATAL_ERROR "OPTIM_LINEAR_ALG_LIB must be set.")
+    endif()
+
+    if(OpenMP_CXX_FOUND)
+        target_link_libraries(${TEST_NAME} PUBLIC OpenMP::OpenMP_CXX)
+    endif()
+
+    if(BLAS_FOUND)
+        target_compile_definitions(${TEST_NAME} PRIVATE OPTIM_ENABLE_BLAS_WRAPPERS)
+        target_include_directories(${TEST_NAME} PRIVATE ${BLAS_INCLUDE_DIRS})
+        target_link_libraries(${TEST_NAME} PUBLIC ${BLAS_LIBRARIES})
+    endif()
+
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+endforeach()
