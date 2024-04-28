@@ -151,6 +151,29 @@ OptimLib is also available as a header-only library (i.e., without the need to c
 
 This will create a new directory, `header_only_version`, containing a copy of OptimLib, modified to work on an inline basis. With this header-only version, simply include the header files (`#include "optim.hpp`) and set the include path to the `head_only_version` directory (e.g.,`-I/path/to/optimlib/header_only_version`).
 
+## Installation Method 3: CMake Shared Library
+
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release \
+     -DOPTIM_LINEAR_ALG_LIB=[arma|eigen] \
+     -DBLA_VENDOR=[Apple|BLAS] ..
+cmake --build [--parallel 8] .
+```
+This will create a `build` directory, and build within that directory.
+* The `-DOPTIM_LINEAR_ALG_LIB` is a required flag.
+One needs to specify either `arma` or `eigen` during the build process.
+* The `-DBLA_VENDOR` flag is optional, it allows one to choose a BLAS vendor, if not set, `cmake` will detect whatever is available in the system.
+
+To install the package, continue to install with the following command
+```
+cmake --install .
+```
+this will install the library in the default system directory. If you prefer to install in a different directory, specify the flag `-DCMAKE_INSTALL_PREFIX=/path/to/install` during the `cmake` configuration step.
+
+To also build the tests and test whether the build is successful, specify also the flag `-DBUILD_TESTING=ON` during the `cmake` configuration step and use `ctest` to run the tests.
+
 ## R Compatibility
 
 To use OptimLib with an R package, first generate a header-only version of the library (see [above](#installation-method-2-header-only-library)). Then simply add a compiler definition before including the OptimLib files.
