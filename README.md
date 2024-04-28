@@ -141,7 +141,7 @@ Configuration options (see `./configure -h`):
 * `--header-only-version` generate a header-only version of OptimLib (see [below](#installation-method-2-header-only-library))
 <!-- * `-R` RcppArmadillo compatible build by setting the appropriate R library directories (R, Rcpp, and RcppArmadillo) -->
 
-## Installation Method 2: Header-only Library
+### Installation Method 2: Header-only Library
 
 OptimLib is also available as a header-only library (i.e., without the need to compile a shared library). Simply run `configure` with the `--header-only-version` option:
 
@@ -151,7 +151,7 @@ OptimLib is also available as a header-only library (i.e., without the need to c
 
 This will create a new directory, `header_only_version`, containing a copy of OptimLib, modified to work on an inline basis. With this header-only version, simply include the header files (`#include "optim.hpp`) and set the include path to the `head_only_version` directory (e.g.,`-I/path/to/optimlib/header_only_version`).
 
-## Installation Method 3: CMake Shared Library
+### Installation Method 3: CMake Shared Library
 
 ```bash
 mkdir build
